@@ -1,19 +1,39 @@
-package ie.gmit.sw;
+package ie.gmit.sw.servletHandlers;
 
 import java.io.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
+import ie.gmit.sw.Processor;
+import ie.gmit.sw.Result;
+
+/**
+ * ServicePollHandler displays the result to the user. 
+ * The results of similarity are displayed in a table.
+ * @author ryangordon
+ *
+ */
 @WebServlet("/poll")
 public class ServicePollHandler extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static ConcurrentHashMap<Integer, Result> outQueue;
+
+
 	public void init() throws ServletException {
 		ServletContext ctx = getServletContext();
-	}
-
+		
+		outQueue = Processor.getOutQueue();
+	    }
+	
+	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		resp.setContentType("text/html"); 
 		PrintWriter out = resp.getWriter(); 
-		
+		int jobNumber = 0;
 		String title = req.getParameter("txtTitle");
 		String taskNumber = req.getParameter("frmTaskNumber");
 		int counter = 1;
@@ -21,7 +41,10 @@ public class ServicePollHandler extends HttpServlet {
 			counter = Integer.parseInt(req.getParameter("counter"));
 			counter++;
 		}
-
+		if(req.getParameter("jobNumber")!=null) {
+		jobNumber = Integer.parseInt(req.getParameter("jobNumber"));
+		}
+	
 		out.print("<html><head><title>A JEE Application for Measuring Document Similarity</title>");		
 		out.print("<link rel=\"stylesheet\" href=\"includes/basic.css\">");
 		out.print("");
@@ -40,7 +63,7 @@ public class ServicePollHandler extends HttpServlet {
 		out.print("<ul class=\"mui-list--inline mui--text-body2\">");
 		out.print(" <li><a href=\"https://github.com/Ryan-Gordon/JEE-Application-for-Measuring-Document-Similarity\"><i class=\"icon ion-social-github\"></i>Github</a></li>");
 		out.print("</ul>");
-		out.print("<td class=\"mui--text-title\">Measuring Document Similarity</td>");
+		out.print("<td class=\"mui--text-title\">Measuring Document Similarity - Result</td>");
 		out.print(" </tr>");
 		out.print("</table>");
 		out.print("</div>");
@@ -53,17 +76,36 @@ public class ServicePollHandler extends HttpServlet {
 		out.print("<b><font color=\"ff0000\">A total of " + counter + " polls have been made for this request.</font></b> ");
 		out.print("Place the final response here... a nice table (or graphic!) of the document similarity...");
 		
-		out.print("<form name=\"frmRequestDetails\">");
-		out.print("<input name=\"txtTitle\" type=\"hidden\" value=\"" + title + "\">");
-		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
-		out.print("<input name=\"counter\" type=\"hidden\" value=\"" + counter + "\">");
-		out.print("</form>");								
+	
+	    if (Processor.getOutQueue().size() > 0) {
+	    	out.print("	<table class=\"mui-table\">");
+	    	out.print("<thead>");
+	    	out.print("<tr>");
+	    	out.print("<th>Document title</th>");
+	    	out.print(" <th>Similarity</th>");
+	    	out.print("  </tr>");
+	    	out.print("</thead>");
+	    	out.print("<tbody>");
+	    	out.print(" </tr>");
+	    
+		if (outQueue.containsKey(jobNumber)) {
+			//Take our result from the outQueue
+			Result results = outQueue.remove(jobNumber);
+			
+		//Print a table row for each document result we have.
+		for (String docTitle : results.getDocuments()) {
+			out.print("<tr><td>");
+			out.print(docTitle);
+			out.print("</td><td>");
+			out.printf("%.0f %%", Double.valueOf(results.getResult(docTitle)));
+			out.print("</td></tr>");
+		}
+		out.print("</tbody>");
+		out.print(" 	</table>");
 		out.print("</body>");	
-		out.print("</html>");	
-		
-		out.print("<script>");
-		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 5000);"); //Refresh every 5 seconds
-		out.print("</script>");
+		out.print("</html>");
+		}
+		}
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
