@@ -1,0 +1,8 @@
+
+db4o-8.0.249.16098-all-java5.jar
+jaccard.war
+xtea_db4o_8.0.jar
+jaccard/
+.DS_Store
+/build/
+/submission/
