@@ -33,7 +33,7 @@ public class Db4oController {
      * As a part of trying to implement a singleton I tried to finalize the db4o object 
      * to allow other threads to get an instance of Db4o
      * 
-     * @return ArrayList<Document> of documents
+     * @return ArrayList of documents
      * @throws IOException
      */
     public List<Document> getDocuments() throws IOException {

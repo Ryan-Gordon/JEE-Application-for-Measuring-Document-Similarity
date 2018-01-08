@@ -74,7 +74,7 @@ public class Db4oHashStore {
 	    /**
 	     * get all objects from the db of the provided Class type
 	     * @param objectClass
-	     * @return a Set of objects of type <T>
+	     * @return a Set of objects of type 
 	     */
 	    @SuppressWarnings("rawtypes")
 	    public ObjectSet<Object> getObjects(Class objectClass) {

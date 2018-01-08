@@ -14,6 +14,11 @@ import javax.servlet.ServletConfig;
 /* NB: You will need to add the JAR file $TOMCAT_HOME/lib/servlet-api.jar to your CLASSPATH 
  *     variable in order to compile a servlet from a command line.
  */
+/**
+ * Class used to handle the file upload and delegate the document to the processor to be handled as a job.
+ * @author ryangordon
+ *
+ */
 @WebServlet("/UploadServlet")
 @MultipartConfig(fileSizeThreshold=1024*1024*2, // 2MB. The file size in bytes after which the file will be temporarily stored on disk. The default size is 0 bytes.
                  maxFileSize=1024*1024*10,      // 10MB. The maximum size allowed for uploaded files, in bytes
@@ -43,8 +48,8 @@ public class ServiceHandler extends HttpServlet {
 				
 		Config.setDb(config.getInitParameter("dbFile"), config.getInitParameter("password"));
 		Config.setShingleSize(Integer.parseInt(config.getInitParameter("shingleSize")));
-		Config.setHashFunctions(303);
-		Config.setNumOfWorkers(10);
+		Config.setHashFunctions(Integer.parseInt(config.getInitParameter("HashFunctionCount")));
+		Config.setNumOfWorkers(Integer.parseInt(config.getInitParameter("workers")));
 		Processor.init();
 	}
 
