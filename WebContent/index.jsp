@@ -15,6 +15,7 @@
 					<b>Document Title :</b><br>
 					<input name="txtTitle" type="text" size="50"/>
 					<p/>
+					<p id="error"><font color="RED">${message}</font></p>
 					<input type="file" name="txtDocument"/>
 					<center><input type="submit" value="Compare Document"></center>
 				</fieldset>							

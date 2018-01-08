@@ -5,11 +5,33 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
-    <servlet-name>ie.gmit.sw.ServiceHandler</servlet-name>
-    <servlet-class>ie.gmit.sw.ServiceHandler</servlet-class>
+    <servlet-name>ie.gmit.sw.servletHandlers.ServiceHandler</servlet-name>
+    <servlet-class>ie.gmit.sw.servletHandlers.ServiceHandler</servlet-class>
     <init-param>
       <param-name>SOME_GLOBAL_OR_ENVIRONMENTAL_VARIABLE</param-name>
-      <param-value>Varaible1</param-value>
+      <param-value>1</param-value>
+    </init-param>
+    <init-param>
+      <param-name>workers</param-name>
+      <param-value>10</param-value>
+    </init-param>
+   
+    <init-param>
+      <param-name>dbFile</param-name>
+      <param-value>documents.data</param-value>
+    </init-param>
+    <init-param>
+      <param-name>password</param-name>
+      <param-value>Top secret</param-value>
+    </init-param>
+    <init-param>
+    	<!-- Depends on the type of documents compared -->
+      <param-name>shingleSize</param-name>
+      <param-value>1</param-value>
+    </init-param>
+    <init-param>
+      <param-name>HashFunctionCount</param-name>
+      <param-value>303</param-value>
     </init-param>
    
   </servlet>
